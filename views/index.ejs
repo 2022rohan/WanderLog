@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Manager</title>
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background: #f4f4f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+form {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+input[type="text"] {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: calc(100% - 22px);
+}
+
+button {
+    padding: 10px 20px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #218838;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+table {
+    width: 60%;
+    margin-right: 20px;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+table caption {
+    padding: 10px;
+    font-size: 1.5em;
+    background: #333;
+    color: #fff;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #f4f4f9;
+}
+
+tr:hover {
+    background: #f1f1f1;
+}
+
+.money-divided {
+    width: 30%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.money-divided h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.money-divided ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.money-divided li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+</head>
+
+<body>
+    <h1>Expense Manager</h1>
+    <div>
+        <form action="/add" method="post">
+            <input type="text" placeholder="Name" name="name" required />
+            <input type="text" placeholder="Money paid" name="paisa" required />
+            <button type="submit">ADD</button>
+        </form>
+    </div>
+    
+    <div>
+        <table>
+            <caption>Total expense to be divided among the group of travellers</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Person name</th>
+                    <th scope="col">Amount Paid</th>
+                    <th scope="col">Add more</th>
+                    <th scope="col">Increase</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if(locals.data){ %>
+                <% data.forEach(element => { %>
+                <form method="post" action="/increase">
+                    <input type="hidden" name="name" value="<%= element.name %>">
+                    <input type="hidden" name="money" value="<%= element.money %>">
+                    <tr>
+                        <th scope="row"><%= element.name %></th>
+                        <td><%= element.money %></td>
+                        <td><input type="text" name="mon" required></td>
+                        <td><button type="submit">ADD</button></td>
+                    </tr>
+                </form>
+                <% }); %>
+                <tfoot>
+                    <tr>
+                        <th scope="row" colspan="1">Total team expense</th>
+                        <td colspan="3"><%= mo %></td>
+                    </tr>
+                </tfoot>
+                <% } %>
+            </tbody>
+        </table>
+
+        <div>
+          <form action="/result" method="get">
+              <button type="submit">Divide</button>
+          </form>
+      </div>
+      
+        <% if(locals.left){ %>
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Money Divided</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% left.forEach(elem => { %>
+                <tr>
+                    <td><%= elem['?column?'] %></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        <% } %>
+    </div>
+</body>
+
+</html>
